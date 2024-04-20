@@ -1,0 +1,47 @@
+server:
+  port: 8080
+
+# Jaeger
+opentracing:
+  jaeger:
+    enabled: true
+    udp-sender.host: 127.0.0.1
+    udp-sender.port: 6831
+
+# Cassandra
+spring:
+  application:
+    name: rdk-binance-module
+  data:
+    cassandra:
+      keyspace-name: rkd_binance_module
+      contact-points: 127.0.0.1
+      port: 9042
+
+# Kafka
+  kafka:
+    bootstrap-servers: localhost:9092
+
+# Binance
+binance:
+  api:
+    url: https://api.binance.com/api/v3
+  market:
+    symbol: BTCUSDT
+    interval: 1d
+    limit: 1
+
+# Micrometer
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 'prometheus'
+  endpoint:
+    prometheus:
+      enabled: true
+
+micrometer:
+  export:
+    prometheus:
+      enabled: true
