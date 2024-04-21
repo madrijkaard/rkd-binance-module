@@ -10,11 +10,20 @@ import java.util.List;
 
 import static com.rkd.binance.definition.TopicDefinition.KLINE_TOPIC;
 
+/**
+ * Class responsible for publishing market events to a Kafka cluster.
+ */
 @Component
 public class KlineProducer {
+
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
+    /**
+     * Method responsible for sending messages in the kline-topic topic.
+     *
+     * @param klineList candlestick list
+     */
     public void sendMessage(List<List<String>> klineList) {
         String serializedMessage = convertListToString(klineList);
         kafkaTemplate.send(KLINE_TOPIC, serializedMessage);

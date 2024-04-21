@@ -6,6 +6,7 @@ import static com.rkd.binance.definition.ExceptionDefinition.ILLEGAL_ARGUMENT;
 
 /**
  * Enumerator responsible for defining chart periods.
+ * @see <a href="https://binance-docs.github.io/apidocs/spot/en/#kline-candlestick-streams">Kline/Candlestick Streams</a>
  */
 public enum IntervalType {
 
