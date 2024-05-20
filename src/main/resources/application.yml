@@ -24,12 +24,12 @@ spring:
 
 # Binance
 binance:
-  api:
-    url: https://api.binance.com/api/v3
-  market:
-    symbol: BTCUSDT
-    interval: 1d
-    limit: 1
+  url:
+    spot: https://api.binance.com
+    future: https://fapi.binance.com
+  wallet:
+    standard-fiat-coin: BRL
+    standard-stable-coin: USDT
 
 # Micrometer
 management:
@@ -45,3 +45,14 @@ micrometer:
   export:
     prometheus:
       enabled: true
+
+# Strategies
+strategy:
+    frequency: 5000
+
+strategies: '{
+  one_ma: false,
+  two_ma: true
+}'
+
+

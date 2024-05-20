@@ -1,4 +1,4 @@
-package com.rkd.binance.strategy.candlestick;
+package com.rkd.binance.strategy;
 
 import com.rkd.binance.model.KlineModel;
 import com.rkd.binance.repository.KlineRepository;

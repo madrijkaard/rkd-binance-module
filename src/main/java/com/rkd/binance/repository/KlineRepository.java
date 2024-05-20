@@ -19,4 +19,7 @@ public interface KlineRepository extends CassandraRepository<KlineModel, Instant
 
     @Query("SELECT sequence FROM kline WHERE open_time = ?0 AND close_time = ?1 LIMIT 1")
     Optional<Integer> findMaxSequenceByOpenTimeAndCloseTime(Instant openTime, Instant closeTime);
+
+    @Query("SELECT * FROM kline WHERE open_time = ?0 AND close_time = ?1 LIMIT ?2")
+    List<KlineModel> findByOpenTimeAndCloseTimeAndLimit(Instant openTime, Instant closeTime, int limit);
 }

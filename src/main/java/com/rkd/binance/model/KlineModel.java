@@ -21,6 +21,8 @@ public class KlineModel {
         private Instant closeTime;
         @PrimaryKeyColumn(name = "sequence", ordinal = 2, type = CLUSTERED, ordering = DESCENDING)
         private int sequence;
+        @Column("interval")
+        private String interval;
         @Column("open_price")
         private String openPrice;
         @Column("high_price")
@@ -43,12 +45,13 @@ public class KlineModel {
         public KlineModel() {
         }
 
-        public KlineModel(Instant openTime, Instant closeTime, int sequence, String openPrice, String highPrice,
+        public KlineModel(Instant openTime, Instant closeTime, int sequence, String interval, String openPrice, String highPrice,
                           String lowPrice, String closePrice, String volume, String quoteAssetVolume, int numberOfTrade,
                           String takerBuyBaseAssetVolume, String takerBuyQuoteAssetVolume) {
                 this.openTime = openTime;
                 this.closeTime = closeTime;
                 this.sequence = sequence;
+                this.interval = interval;
                 this.openPrice = openPrice;
                 this.highPrice = highPrice;
                 this.lowPrice = lowPrice;
@@ -82,6 +85,14 @@ public class KlineModel {
 
         public void setSequence(int sequence) {
                 this.sequence = sequence;
+        }
+
+        public String getInterval() {
+                return interval;
+        }
+
+        public void setInterval(String interval) {
+                this.interval = interval;
         }
 
         public String getOpenPrice() {
