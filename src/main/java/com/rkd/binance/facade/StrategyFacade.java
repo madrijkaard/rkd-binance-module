@@ -19,12 +19,12 @@ public class StrategyFacade {
     /**
      * Method responsible for executing the strategy using two moving averages.
      *
-     * @param symbol   currency pair
+     * @param symbol    currency pair
      * @param intervals chart period
-     * @param ma       number of candlesticks that will return
+     * @param ma        number of candlesticks that will return
      * @return type of decision: buy, sell and wait
      */
-    public DecisionType execute(String symbol, List<String> intervals, int... ma) {
-        return twoMaStrategy.execute(symbol, intervals, ma);
+    public DecisionType executeTwoMa(String symbol, String vector, float minimumRange, float maximumRange, List<String> intervals, int... ma) {
+        return twoMaStrategy.execute(symbol, vector, minimumRange, maximumRange, intervals, ma);
     }
 }

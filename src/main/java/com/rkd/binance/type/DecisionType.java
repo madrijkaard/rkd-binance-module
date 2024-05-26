@@ -5,8 +5,11 @@ import java.util.Arrays;
 import static com.rkd.binance.definition.ExceptionDefinition.ILLEGAL_ARGUMENT;
 
 public enum DecisionType {
+
     BUY,
+    CROSS_BUY,
     SELL,
+    CROSS_SELL,
     WAIT;
 
     public static DecisionType of(String decision) {

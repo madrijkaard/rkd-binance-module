@@ -1,7 +1,7 @@
 package com.rkd.binance.definition;
 
 public class ExceptionDefinition {
-    public static final String ILLEGAL_ARGUMENT = "Illegal argument for the following field: ";
+    public static final String ILLEGAL_ARGUMENT = "Illegal argument: ";
     public static final String ENDPOINT_DID_NOT_RETURN_RESULTS = "The following endpoint returned no results: ";
     public static final String CANDLESTICK_LIST_IS_EMPTY = "Candlestick list is empty";
     public static final String INTERVAL_IS_NOT_MAPPED = "Interval is not mapped";

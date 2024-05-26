@@ -2,6 +2,7 @@ package com.rkd.binance.strategy;
 
 import com.rkd.binance.model.KlineModel;
 import com.rkd.binance.type.DecisionType;
+import com.rkd.binance.type.VectorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import static com.rkd.binance.definition.ExceptionDefinition.*;
-import static com.rkd.binance.type.DecisionType.*;
 
 /**
  * Class responsible for executing the buying and selling strategy using two moving averages.
@@ -22,28 +22,35 @@ public class TwoMaStrategy {
 
     @Autowired
     private LoadMarketStrategy loadMarketStrategy;
+    @Autowired
+    private DecideStrategy decideStrategy;
 
     /**
      * Method responsible for executing the strategy using two moving averages.
      *
-     * @param symbol   currency pair
-     * @param intervals chart period
-     * @param ma       number of candlesticks that will return
+     * @param symbol       currency pair
+     * @param vector       UP or DOWN
+     * @param minimumRange
+     * @param maximumRange
+     * @param intervals    chart period
+     * @param ma           number of candlesticks that will return
      * @return type of decision: buy, sell and wait
      */
-    public DecisionType execute(String symbol, List<String> intervals, int... ma) {
-        return prepare(symbol, intervals, ma);
+    public DecisionType execute(String symbol, String vector, float minimumRange, float maximumRange, List<String> intervals, int... ma) {
+        return prepare(symbol, vector, minimumRange, maximumRange, intervals, ma);
     }
 
     /**
      * Method responsible for preparing the data that will be used to calculate the moving averages.
      *
-     * @param symbol   currency pair
+     * @param symbol    currency pair
      * @param intervals chart period
-     * @param ma       number of candlesticks that will return
+     * @param ma        number of candlesticks that will return
      * @return type of decision: buy, sell and wait
      */
-    private DecisionType prepare(String symbol, List<String> intervals, int... ma) {
+    private DecisionType prepare(String symbol, String vector, float minimumRange, float maximumRange, List<String> intervals, int... ma) {
+
+        VectorType vectorType = VectorType.of(vector);
 
         if (intervals.size() != 1 || ma.length != 2) {
             throw new IllegalArgumentException();
@@ -57,7 +64,9 @@ public class TwoMaStrategy {
         CompletableFuture<Double> completableFutureSma = CompletableFuture.supplyAsync(() -> getCandlesticksAndCalculateMa(symbol, interval, sma));
         CompletableFuture<Double> completableFutureLma = CompletableFuture.supplyAsync(() -> getCandlesticksAndCalculateMa(symbol, interval, lma));
 
-        CompletableFuture<DecisionType> combinedFuture = completableFutureSma.thenCombine(completableFutureLma, this::decide);
+        CompletableFuture<DecisionType> combinedFuture =
+                completableFutureSma.thenCombine(completableFutureLma, (smaValue, lmaValue) ->
+                        decideStrategy.decide(smaValue, lmaValue, vectorType, minimumRange, maximumRange));
 
         try {
             return combinedFuture.get();
@@ -117,21 +126,5 @@ public class TwoMaStrategy {
         }
 
         return sum / period;
-    }
-
-    /**
-     * Method responsible for deciding what to do in the operation.
-     *
-     * @param sma short moving average
-     * @param lma long moving average
-     * @return type of decision: buy, sell or wait
-     */
-    private DecisionType decide(double sma, double lma) {
-
-        if (sma == lma) {
-            return WAIT;
-        }
-
-        return sma > lma ? BUY : SELL;
     }
 }

@@ -1,6 +1,4 @@
-package com.rkd.binance.util;
-
-import com.rkd.binance.type.MarginType;
+package com.rkd.binance.type;
 
 import java.util.Arrays;
 

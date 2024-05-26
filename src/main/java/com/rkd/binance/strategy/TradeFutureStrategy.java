@@ -3,7 +3,7 @@ package com.rkd.binance.strategy;
 import com.rkd.binance.client.BinanceFutureClient;
 import com.rkd.binance.factory.CredentialFactory;
 import com.rkd.binance.type.*;
-import com.rkd.binance.util.PositionSideType;
+import com.rkd.binance.type.PositionSideType;
 import com.rkd.binance.util.RequestUtil;
 import com.rkd.binance.util.SignatureUtil;
 import org.springframework.beans.factory.annotation.Autowired;

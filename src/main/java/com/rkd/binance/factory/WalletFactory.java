@@ -31,7 +31,7 @@ public class WalletFactory {
      */
     @Bean
     @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-    public SpotWalletDto spot() {
+    public SpotWalletDto spotWallet() {
         return walletFacade.loadSpot(fiatCoin, stableCoin);
     }
 
@@ -40,7 +40,7 @@ public class WalletFactory {
      */
     @Bean
     @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-    public List<CrossMarginWalletDto> future() {
+    public List<CrossMarginWalletDto> futureWallet() {
         return walletFacade.loadFuture();
     }
 
