@@ -22,6 +22,10 @@ public class WalletFactory {
     private String fiatCoin;
     @Value("${binance.wallet.standard-stable-coin}")
     private String stableCoin;
+    @Value("${binance.market.minimum-stable-coin}")
+    private double minimumStableCoin;
+    @Value("${binance.market.minimum-fiat-coin}")
+    private double minimumFiatCoin;
 
     @Autowired
     private WalletFacade walletFacade;
@@ -50,5 +54,13 @@ public class WalletFactory {
 
     public String getStableCoin() {
         return stableCoin;
+    }
+
+    public double getMinimumStableCoin() {
+        return minimumStableCoin;
+    }
+
+    public double getMinimumFiatCoin() {
+        return minimumFiatCoin;
     }
 }

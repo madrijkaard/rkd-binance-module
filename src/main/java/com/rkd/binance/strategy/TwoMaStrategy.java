@@ -29,12 +29,12 @@ public class TwoMaStrategy {
      * Method responsible for executing the strategy using two moving averages.
      *
      * @param symbol       currency pair
-     * @param vector       UP or DOWN
-     * @param minimumRange
-     * @param maximumRange
+     * @param vector       direction that will be used to execute the gains, example: UP or DOWN
+     * @param minimumRange minimum required to execute a trade
+     * @param maximumRange maximum required to execute a trade
      * @param intervals    chart period
      * @param ma           number of candlesticks that will return
-     * @return type of decision: buy, sell and wait
+     * @return BUY, CROSS_BUY, SELL, CROSS_SELL, WAIT
      */
     public DecisionType execute(String symbol, String vector, float minimumRange, float maximumRange, List<String> intervals, int... ma) {
         return prepare(symbol, vector, minimumRange, maximumRange, intervals, ma);
@@ -43,10 +43,13 @@ public class TwoMaStrategy {
     /**
      * Method responsible for preparing the data that will be used to calculate the moving averages.
      *
-     * @param symbol    currency pair
-     * @param intervals chart period
-     * @param ma        number of candlesticks that will return
-     * @return type of decision: buy, sell and wait
+     * @param symbol       currency pair
+     * @param vector       direction that will be used to execute the gains, example: UP or DOWN
+     * @param minimumRange minimum required to execute a trade
+     * @param maximumRange maximum required to execute a trade
+     * @param intervals    chart period
+     * @param ma           number of candlesticks that will return
+     * @return BUY, CROSS_BUY, SELL, CROSS_SELL, WAIT
      */
     private DecisionType prepare(String symbol, String vector, float minimumRange, float maximumRange, List<String> intervals, int... ma) {
 

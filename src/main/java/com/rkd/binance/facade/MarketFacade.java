@@ -1,9 +1,11 @@
 package com.rkd.binance.facade;
 
+import com.rkd.binance.dto.SpotWalletDto;
 import com.rkd.binance.model.KlineModel;
-import com.rkd.binance.strategy.LoadMarketStrategy;
-import com.rkd.binance.strategy.TradeFutureStrategy;
-import com.rkd.binance.strategy.TradeSpotStrategy;
+import com.rkd.binance.strategy.*;
+import com.rkd.binance.type.DecisionType;
+import com.rkd.binance.type.StrategyType;
+import com.rkd.binance.type.VectorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,12 @@ public class MarketFacade {
     private TradeSpotStrategy tradeSpotStrategy;
     @Autowired
     private TradeFutureStrategy tradeFutureStrategy;
+    @Autowired
+    private DecideStrategy decideStrategy;
+    @Autowired
+    private ExecuteTradeStrategy executeTradeStrategy;
+    @Autowired
+    private ExecuteSpotWalletStrategy executeSpotWalletStrategy;
 
     /**
      * Method responsible for obtaining market information based on parameters.
@@ -47,17 +55,59 @@ public class MarketFacade {
     }
 
     /**
-     *
-     *
-     * @param symbol The trading pair symbol, e.g., "BTCUSDT"
-     * @param margin The margin type, either "ISOLATED" or "CROSSED"
-     * @param leverage The leverage level to be set
-     * @param side The order side, either "BUY" or "SELL"
+     * @param symbol       The trading pair symbol, e.g., "BTCUSDT"
+     * @param margin       The margin type, either "ISOLATED" or "CROSSED"
+     * @param leverage     The leverage level to be set
+     * @param side         The order side, either "BUY" or "SELL"
      * @param positionSide The position side, e.g., "LONG" or "SHORT"
-     * @param order The order type, e.g., "LIMIT" or "MARKET"
-     * @param quantity The quantity of the order
+     * @param order        The order type, e.g., "LIMIT" or "MARKET"
+     * @param quantity     The quantity of the order
      */
     public void tradeFuture(String symbol, String margin, int leverage, String side, String positionSide, String order, String quantity) {
         tradeFutureStrategy.tradeFuture(symbol, margin, leverage, side, positionSide, order, quantity);
+    }
+
+    /**
+     * Method responsible for deciding what to do in the operation.
+     *
+     * @param sma          short moving average
+     * @param lma          long moving average
+     * @param vectorType   direction that will be used to execute the gains, example: UP or DOWN
+     * @param minimumRange minimum required to execute a trade
+     * @param maximumRange maximum required to execute a trade
+     * @return BUY, CROSS_BUY, SELL, CROSS_SELL, WAIT
+     */
+    public DecisionType decide(double sma, double lma, VectorType vectorType, float minimumRange, float maximumRange) {
+        return decideStrategy.decide(sma, lma, vectorType, minimumRange, maximumRange);
+    }
+
+    /**
+     *
+     * @param symbol
+     * @param vector
+     * @param minimumRange
+     * @param maximumRange
+     * @param strategyTypeList
+     * @return
+     */
+    public DecisionType initialize(String symbol, String vector, float minimumRange, float maximumRange, List<StrategyType> strategyTypeList) {
+        return executeTradeStrategy.initialize(symbol, vector, minimumRange, maximumRange, strategyTypeList);
+    }
+
+    /**
+     *
+     * @param spotWalletDto
+     * @param minimumStableCoin
+     * @param stableCoin
+     * @param spotVector
+     * @param spotMinimumRange
+     * @param spotMaximumRange
+     * @param strategyTypeList
+     */
+    public void initializeSpot(SpotWalletDto spotWalletDto, double minimumStableCoin, String stableCoin, String spotVector, float spotMinimumRange, float spotMaximumRange, List<StrategyType> strategyTypeList) {
+        executeSpotWalletStrategy.initializeSpot(spotWalletDto, minimumStableCoin, stableCoin, spotVector, spotMinimumRange, spotMaximumRange, strategyTypeList);
+    }
+
+    public void initializeFuture(SpotWalletDto spotWalletDto, double minimumStableCoin, String stableCoin, String spotVector, float spotMinimumRange, float spotMaximumRange, List<StrategyType> strategyTypeList) {
     }
 }

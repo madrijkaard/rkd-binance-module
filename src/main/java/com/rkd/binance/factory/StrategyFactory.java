@@ -1,6 +1,7 @@
 package com.rkd.binance.factory;
 
 import com.rkd.binance.facade.StrategyFacade;
+import com.rkd.binance.type.DecisionType;
 import com.rkd.binance.type.StrategyType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
