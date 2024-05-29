@@ -20,7 +20,21 @@ public enum SymbolType {
     FTM_USDT("FTMUSDT"),
     SAND_USDT("SANDUSDT"),
     MANA_USDT("MANAUSDT"),
-    ALGO_USDT("ALGOUSDT");
+    ALGO_USDT("ALGOUSDT"),
+    INJ_USDT("INJUSDT"),
+    ETH_BTC("ETHBTC"),
+    ADA_BTC("ADABTC"),
+    AVAX_BTC("AVAXBTC"),
+    LINK_BTC("LINKBTC"),
+    MATIC_BTC("MATICBTC"),
+    DOT_BTC("DOTBTC"),
+    ATOM_BTC("ATOMBTC"),
+    GRT_BTC("GRTBTC"),
+    FTM_BTC("FTMBTC"),
+    SAND_BTC("SANDBTC"),
+    MANA_BTC("MANABTC"),
+    ALGO_BTC("ALGOBTC"),
+    INJ_BTC("INJBTC");
 
     SymbolType(String symbol) {
         this.symbol = symbol;

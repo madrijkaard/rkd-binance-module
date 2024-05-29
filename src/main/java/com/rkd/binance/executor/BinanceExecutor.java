@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public abstract class BinanceExecutor {
+public class BinanceExecutor {
 
     @Value("${module.spot.status}")
     private boolean spotStatus;
@@ -55,23 +55,17 @@ public abstract class BinanceExecutor {
     public void executeSpot() {
 
         var wallet = walletFactory.spotWallet();
-        var minimum = walletFactory.getMinimumStableCoin();
+        var spotRank = marketFactory.rankSpot();
+        var haveMoney = walletFactory.haveMoney(spotRank);
         var stableCoin = walletFactory.getStableCoin();
         var strategyList = strategyFactory.spotStrategy();
 
-        marketFactory.market().initializeSpot(wallet, minimum, stableCoin, spotVector, spotMinimumRange, spotMaximumRange, strategyList);
+        marketFactory.market().initializeSpot(wallet, spotRank, stableCoin, spotMinimumRange, spotMaximumRange, strategyList, haveMoney);
     }
 
     /**
      *
      */
     public void executeFuture() {
-
-        var wallet = walletFactory.spotWallet();
-        var minimum = walletFactory.getMinimumStableCoin();
-        var stableCoin = walletFactory.getStableCoin();
-        var strategyList = strategyFactory.spotStrategy();
-
-        marketFactory.market().initializeFuture(wallet, minimum, stableCoin, spotVector, spotMinimumRange, spotMaximumRange, strategyList);
     }
 }

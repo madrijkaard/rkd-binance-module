@@ -3,6 +3,7 @@ package com.rkd.binance.factory;
 import com.rkd.binance.dto.CrossMarginWalletDto;
 import com.rkd.binance.dto.SpotWalletDto;
 import com.rkd.binance.facade.WalletFacade;
+import com.rkd.binance.type.CryptoType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -62,5 +63,17 @@ public class WalletFactory {
 
     public double getMinimumFiatCoin() {
         return minimumFiatCoin;
+    }
+
+    public boolean haveMoney(List<CryptoType> cryptoTypes) {
+
+        if (cryptoTypes.isEmpty() && spotWallet().stableCoin() >= minimumStableCoin)
+            return true;
+
+        var quantity = cryptoTypes.size();
+
+        var result = spotWallet().stableCoin() / quantity;
+
+        return result >= minimumStableCoin;
     }
 }

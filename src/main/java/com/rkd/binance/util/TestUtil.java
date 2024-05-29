@@ -49,9 +49,9 @@ public class TestUtil {
         return new float[]{minimumRange, maximumRange};
     }
 
-    public static VectorType getRandomVectorType() {
+    public static String getRandomVectorType() {
         VectorType[] values = VectorType.values();
         int index = new Random().nextInt(values.length);
-        return values[index];
+        return values[index].name();
     }
 }

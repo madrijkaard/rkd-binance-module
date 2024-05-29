@@ -17,4 +17,12 @@ public enum DecisionType {
                 .filter(decisionType -> decisionType.name().equalsIgnoreCase(decision)).findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(ILLEGAL_ARGUMENT.concat("decision")));
     }
+
+    public static boolean isCrossBuy(DecisionType decisionType) {
+        return decisionType != null && decisionType.equals(CROSS_BUY);
+    }
+
+    public static boolean isCrossSell(DecisionType decisionType) {
+        return decisionType != null && decisionType.equals(CROSS_SELL);
+    }
 }

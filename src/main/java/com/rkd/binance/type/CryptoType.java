@@ -1,6 +1,7 @@
 package com.rkd.binance.type;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static com.rkd.binance.definition.ExceptionDefinition.ILLEGAL_ARGUMENT;
@@ -45,5 +46,9 @@ public enum CryptoType {
     public static Optional<CryptoType> exist(String crypto) {
         return Arrays.stream(CryptoType.values()).filter(
                 cryptoType -> cryptoType.name().equalsIgnoreCase(crypto)).findFirst();
+    }
+
+    public static boolean exist(List<CryptoType> spotRank, CryptoType cryptoType) {
+        return spotRank.stream().anyMatch(crypto -> crypto.equals(cryptoType));
     }
 }

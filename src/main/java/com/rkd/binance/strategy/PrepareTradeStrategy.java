@@ -7,13 +7,25 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Class responsible for preparing a trade based on a cryptocurrency pair and a strategy.
+ */
 @Service
-public class ExecuteTradeStrategy {
+public class PrepareTradeStrategy {
 
     @Autowired
     private TwoMaStrategy twoMaStrategy;
 
-    public DecisionType initialize(String symbol, String vector, float minimumRange, float maximumRange, List<StrategyType> strategyTypeList) {
+    /**
+     *
+     * @param symbol
+     * @param vector
+     * @param minimumRange
+     * @param maximumRange
+     * @param strategyTypeList
+     * @return
+     */
+    public DecisionType prepare(String symbol, String vector, float minimumRange, float maximumRange, List<StrategyType> strategyTypeList) {
 
         return strategyTypeList.stream().map(
 

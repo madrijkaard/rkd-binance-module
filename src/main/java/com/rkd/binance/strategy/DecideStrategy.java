@@ -19,12 +19,14 @@ public class DecideStrategy {
      *
      * @param sma short moving average
      * @param lma long moving average
-     * @param vectorType direction that will be used to execute the gains, example: UP or DOWN
+     * @param vector direction that will be used to execute the gains, example: UP or DOWN
      * @param minimumRange minimum required to execute a trade
      * @param maximumRange maximum required to execute a trade
      * @return BUY, CROSS_BUY, SELL, CROSS_SELL, WAIT
      */
-    public DecisionType decide(double sma, double lma, VectorType vectorType, float minimumRange, float maximumRange) {
+    public DecisionType decide(double sma, double lma, String vector, float minimumRange, float maximumRange) {
+
+        var vectorType = VectorType.of(vector);
 
         if (sma == lma) {
             return WAIT;
@@ -49,6 +51,10 @@ public class DecideStrategy {
      * @return BUY, CROSS_BUY, SELL, CROSS_SELL, WAIT
      */
     private DecisionType checkCrossBuy(double amplitude, VectorType vectorType, float minimumRange, float maximumRange) {
+
+        if (minimumRange == 0 && maximumRange == 0)
+            return CROSS_BUY;
+
         if (amplitude >= minimumRange && amplitude <= maximumRange) {
             return VectorType.isUp(vectorType) ? CROSS_BUY : BUY;
         }
@@ -65,6 +71,10 @@ public class DecideStrategy {
      * @return BUY, CROSS_BUY, SELL, CROSS_SELL, WAIT
      */
     private DecisionType checkCrossSell(double amplitude, VectorType vectorType, float minimumRange, float maximumRange) {
+
+        if (minimumRange == 0 && maximumRange == 0)
+            return CROSS_SELL;
+
         if (amplitude >= minimumRange && amplitude <= maximumRange) {
             return VectorType.isDown(vectorType) ? CROSS_SELL : SELL;
         }

@@ -3,6 +3,7 @@ package com.rkd.binance.facade;
 import com.rkd.binance.dto.SpotWalletDto;
 import com.rkd.binance.model.KlineModel;
 import com.rkd.binance.strategy.*;
+import com.rkd.binance.type.CryptoType;
 import com.rkd.binance.type.DecisionType;
 import com.rkd.binance.type.StrategyType;
 import com.rkd.binance.type.VectorType;
@@ -26,9 +27,11 @@ public class MarketFacade {
     @Autowired
     private DecideStrategy decideStrategy;
     @Autowired
-    private ExecuteTradeStrategy executeTradeStrategy;
+    private PrepareTradeStrategy decideTradeStrategy;
     @Autowired
-    private ExecuteSpotWalletStrategy executeSpotWalletStrategy;
+    private ExecuteSpotStrategy executeSpotStrategy;
+    @Autowired
+    private MostRelevantCryptoStrategy mostRelevantCryptoStrategy;
 
     /**
      * Method responsible for obtaining market information based on parameters.
@@ -77,8 +80,8 @@ public class MarketFacade {
      * @param maximumRange maximum required to execute a trade
      * @return BUY, CROSS_BUY, SELL, CROSS_SELL, WAIT
      */
-    public DecisionType decide(double sma, double lma, VectorType vectorType, float minimumRange, float maximumRange) {
-        return decideStrategy.decide(sma, lma, vectorType, minimumRange, maximumRange);
+    public DecisionType decide(double sma, double lma, String vector, float minimumRange, float maximumRange) {
+        return decideStrategy.decide(sma, lma, vector, minimumRange, maximumRange);
     }
 
     /**
@@ -90,24 +93,29 @@ public class MarketFacade {
      * @param strategyTypeList
      * @return
      */
-    public DecisionType initialize(String symbol, String vector, float minimumRange, float maximumRange, List<StrategyType> strategyTypeList) {
-        return executeTradeStrategy.initialize(symbol, vector, minimumRange, maximumRange, strategyTypeList);
+    public DecisionType prepare(String symbol, String vector, float minimumRange, float maximumRange, List<StrategyType> strategyTypeList) {
+        return decideTradeStrategy.prepare(symbol, vector, minimumRange, maximumRange, strategyTypeList);
     }
 
     /**
      *
      * @param spotWalletDto
-     * @param minimumStableCoin
+     * @param spotRank
      * @param stableCoin
-     * @param spotVector
      * @param spotMinimumRange
      * @param spotMaximumRange
      * @param strategyTypeList
+     * @param haveMoney
      */
-    public void initializeSpot(SpotWalletDto spotWalletDto, double minimumStableCoin, String stableCoin, String spotVector, float spotMinimumRange, float spotMaximumRange, List<StrategyType> strategyTypeList) {
-        executeSpotWalletStrategy.initializeSpot(spotWalletDto, minimumStableCoin, stableCoin, spotVector, spotMinimumRange, spotMaximumRange, strategyTypeList);
+    public void initializeSpot(SpotWalletDto spotWalletDto, List<CryptoType> spotRank, String stableCoin, float spotMinimumRange, float spotMaximumRange, List<StrategyType> strategyTypeList, boolean haveMoney) {
+        executeSpotStrategy.initialize(spotWalletDto, spotRank, stableCoin, spotMinimumRange, spotMaximumRange, strategyTypeList, haveMoney);
     }
 
+
     public void initializeFuture(SpotWalletDto spotWalletDto, double minimumStableCoin, String stableCoin, String spotVector, float spotMinimumRange, float spotMaximumRange, List<StrategyType> strategyTypeList) {
+    }
+
+    public List<CryptoType> rankMostRelevant(int rank) {
+        return mostRelevantCryptoStrategy.rankMostRelevant(rank);
     }
 }

@@ -55,8 +55,11 @@ module:
     status: true
     frequency: 5000
     vector: UP
-    minimum-range: 0.3
-    maximum-range: 0.4
+    minimum-range: 0.0
+    maximum-range: 0.0
+    rank: 3
+    stop-limit: 0.5
+    target-price: 2.5
     strategy: '{
       two_ma: true
     }'
@@ -66,6 +69,9 @@ module:
     vector: DOWN
     minimum-range: 0.3
     maximum-range: 0.4
+    rank: 0
+    stop-limit: 0.5
+    target-price: 2.5
     strategy: '{
       two_ma: false
     }'

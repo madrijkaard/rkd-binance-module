@@ -2,7 +2,6 @@ package com.rkd.binance.strategy;
 
 import com.rkd.binance.model.KlineModel;
 import com.rkd.binance.type.DecisionType;
-import com.rkd.binance.type.VectorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,8 +52,6 @@ public class TwoMaStrategy {
      */
     private DecisionType prepare(String symbol, String vector, float minimumRange, float maximumRange, List<String> intervals, int... ma) {
 
-        VectorType vectorType = VectorType.of(vector);
-
         if (intervals.size() != 1 || ma.length != 2) {
             throw new IllegalArgumentException();
         }
@@ -69,7 +66,7 @@ public class TwoMaStrategy {
 
         CompletableFuture<DecisionType> combinedFuture =
                 completableFutureSma.thenCombine(completableFutureLma, (smaValue, lmaValue) ->
-                        decideStrategy.decide(smaValue, lmaValue, vectorType, minimumRange, maximumRange));
+                        decideStrategy.decide(smaValue, lmaValue, vector, minimumRange, maximumRange));
 
         try {
             return combinedFuture.get();
