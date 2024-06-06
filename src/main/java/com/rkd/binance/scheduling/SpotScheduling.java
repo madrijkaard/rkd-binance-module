@@ -13,7 +13,8 @@ public class SpotScheduling extends BinanceExecutor {
     /**
      * Method responsible for executing the scheduler according to the period defined in the module's main properties file.
      */
-    @Scheduled(fixedRateString = "${module.spot.frequency}")
+    //@Scheduled(fixedRateString = "${module.spot.frequency}")
+    @Scheduled(initialDelay = 60000, fixedRate = Long.MAX_VALUE)
     public void test() {
         execute();
     }

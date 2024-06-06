@@ -8,6 +8,5 @@ import org.springframework.stereotype.Component;
 public class FutureScheduling extends BinanceExecutor {
     @Scheduled(fixedRateString = "${module.future.frequency}")
     public void test() {
-        execute();
     }
 }

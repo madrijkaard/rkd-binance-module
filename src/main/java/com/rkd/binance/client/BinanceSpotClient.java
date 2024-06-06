@@ -1,5 +1,6 @@
 package com.rkd.binance.client;
 
+import com.rkd.binance.config.FeignConfig;
 import com.rkd.binance.dto.BalanceSpotDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -16,7 +17,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  *
  * @see <a href="https://github.com/binance/binance-spot-api-docs/tree/master">Official Documentation for the Binance APIs and Streams</a>
  */
-@FeignClient(value = "spot", url = "${binance.url.spot}")
+@FeignClient(value = "spot", url = "${binance.url.spot}", configuration = FeignConfig.class)
 public interface BinanceSpotClient {
 
     /**
@@ -56,4 +57,14 @@ public interface BinanceSpotClient {
                                         @RequestHeader(name = "X-MBX-APIKEY") String key,
                                         @RequestParam(name = "timestamp") String timestamp,
                                         @RequestParam(name = "signature") String signature);
+
+    @RequestMapping(method = POST, value = "/api/v3/order")
+    String tradeSpot(@RequestHeader(name = "Content-Type") String content,
+                                    @RequestHeader(name = "X-MBX-APIKEY") String key,
+                                    @RequestParam(name = "symbol") String symbol,
+                                    @RequestParam(name = "side") String side,
+                                    @RequestParam(name = "quantity") String quantity,
+                                    @RequestParam(name = "type") String type,
+                                    @RequestParam(name = "timestamp") String timestamp,
+                                    @RequestParam(name = "signature") String signature);
 }

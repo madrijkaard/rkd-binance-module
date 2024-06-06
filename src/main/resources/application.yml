@@ -53,7 +53,7 @@ micrometer:
 module:
   spot:
     status: true
-    frequency: 5000
+    frequency: 555000
     vector: UP
     minimum-range: 0.0
     maximum-range: 0.0

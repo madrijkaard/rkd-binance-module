@@ -80,7 +80,8 @@ public class TradeFutureStrategy {
         var queryPath = RequestUtil.joinQueryParameters(parameters);
         var signature = SignatureUtil.getSignature(queryPath, CredentialFactory.getInstance().getSecret());
 
-        binanceFutureClient.changeMarginType(APPLICATION_JSON_VALUE, CredentialFactory.getInstance().getKey(), symbolType.getSymbol(), MarginType.ISOLATED.name(), String.valueOf(milliseconds), signature);
+        binanceFutureClient.changeMarginType(APPLICATION_JSON_VALUE, CredentialFactory.getInstance().getKey(),
+                symbolType.getSymbol(), MarginType.ISOLATED.name(), String.valueOf(milliseconds), signature);
     }
 
     /**

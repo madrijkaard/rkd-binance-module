@@ -49,12 +49,11 @@ public class MarketFacade {
      * Method responsible for making a purchase or sale of a cryptocurrency.
      *
      * @param symbol   Example: BTCUSDT, ETHUSDT, ADAUSDT
-     * @param interval chart period
      * @param money    amount of resources that will be spent on buying or selling
      * @param decision Example: Buy, Sell, Wait
      */
-    public void tradeSpot(String symbol, String interval, double money, String decision) {
-        tradeSpotStrategy.tradeSpot(symbol, interval, money, decision);
+    public void tradeSpot(String symbol, double money, String decision) {
+        tradeSpotStrategy.tradeSpot(symbol, money, decision);
     }
 
     /**

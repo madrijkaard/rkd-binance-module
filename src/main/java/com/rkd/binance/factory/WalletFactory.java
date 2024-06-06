@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -37,7 +38,8 @@ public class WalletFactory {
     @Bean
     @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
     public SpotWalletDto spotWallet() {
-        return walletFacade.loadSpot(fiatCoin, stableCoin);
+        var walletDto = walletFacade.loadSpot(fiatCoin, stableCoin);
+        return checkMinimumQuantity(walletDto);
     }
 
     /**
@@ -75,5 +77,19 @@ public class WalletFactory {
         var result = spotWallet().stableCoin() / quantity;
 
         return result >= minimumStableCoin;
+    }
+
+    public SpotWalletDto checkMinimumQuantity(SpotWalletDto spotWalletDto) {
+
+        HashMap<CryptoType, Double> cryptos = new HashMap<>();
+
+        spotWalletDto.cryptos().forEach(
+                (cryptoType, money) -> {
+                    if (money >= 20) {
+                        cryptos.put(cryptoType, money);
+                    }
+                });
+
+        return new SpotWalletDto(spotWalletDto.fiatCoin(), spotWalletDto.stableCoin(), cryptos);
     }
 }

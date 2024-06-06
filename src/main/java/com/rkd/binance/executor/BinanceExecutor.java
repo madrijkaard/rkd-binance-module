@@ -3,6 +3,7 @@ package com.rkd.binance.executor;
 import com.rkd.binance.factory.MarketFactory;
 import com.rkd.binance.factory.StrategyFactory;
 import com.rkd.binance.factory.WalletFactory;
+import com.rkd.binance.strategy.TradeSpotStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -36,6 +37,8 @@ public class BinanceExecutor {
     private StrategyFactory strategyFactory;
     @Autowired
     private MarketFactory marketFactory;
+    @Autowired
+    private TradeSpotStrategy tradeSpotStrategy;
 
     /**
      *
