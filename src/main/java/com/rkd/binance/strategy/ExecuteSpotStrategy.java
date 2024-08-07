@@ -8,9 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.rkd.binance.type.DecisionType.*;
-import static com.rkd.binance.type.SymbolType.*;
-import static com.rkd.binance.type.VectorType.*;
+import static com.rkd.binance.type.DecisionType.BUY;
 
 /**
  *

@@ -1,10 +1,13 @@
 package com.rkd.binance.strategy;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rkd.binance.client.BinanceSpotClient;
-import com.rkd.binance.exception.BadRequestException;
-import com.rkd.binance.exception.InternalServerErrorException;
+import com.rkd.binance.exception.CustomFeignException;
 import com.rkd.binance.factory.CredentialFactory;
 import com.rkd.binance.factory.TradeJournalFactory;
+import com.rkd.binance.response.ErrorTradeResponse;
+import com.rkd.binance.response.TradeSpotResponse;
 import com.rkd.binance.type.DecisionType;
 import com.rkd.binance.type.SymbolType;
 import com.rkd.binance.util.RequestUtil;
@@ -12,9 +15,9 @@ import com.rkd.binance.util.SignatureUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
 
+import static com.rkd.binance.definition.ExceptionDefinition.MONEY_AND_PRICE_ZERO;
 import static com.rkd.binance.type.IntervalType.ONE_HOUR;
 import static com.rkd.binance.type.OrderType.MARKET;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -31,18 +34,18 @@ public class TradeSpotStrategy {
     private LastPriceCandlestickStrategy lastPriceCandlestickStrategy;
 
     /**
-     * Method responsible for carrying out purchase and sale operations
+     * Method responsible for executing purchase and sale operations.
      *
      * @param symbol   Example: BTCUSDT, ETHUSDT, ADAUSDT
-     * @param interval chart period
      * @param money    amount of resources that will be spent on buying or selling
      * @param decision Example: Buy, Sell, Wait
-     * @throws IllegalStateException an error occurred while trying to trade
+     * @throws CustomFeignException an error occurred while trying to trade
      */
     public void tradeSpot(String symbol, double money, String decision) {
 
         long milliseconds = System.currentTimeMillis();
 
+        var apiKey = CredentialFactory.getInstance().getKey();
         var symbolType = SymbolType.of(symbol);
         var decisionType = DecisionType.of(decision);
         var typeOrder = MARKET.name();
@@ -60,12 +63,10 @@ public class TradeSpotStrategy {
         var queryPath = RequestUtil.joinQueryParameters(parameters);
         var signature = SignatureUtil.getSignature(queryPath, CredentialFactory.getInstance().getSecret());
 
-        String response = null;
-
         try {
 
-            response = binanceSpotClient.tradeSpot(APPLICATION_JSON_VALUE,
-                    CredentialFactory.getInstance().getKey(),
+            var response = binanceSpotClient.tradeSpot(APPLICATION_JSON_VALUE,
+                    apiKey,
                     symbolType.getSymbol(),
                     decisionType.name(),
                     quantity,
@@ -73,15 +74,16 @@ public class TradeSpotStrategy {
                     String.valueOf(milliseconds),
                     signature);
 
-        } catch (BadRequestException e) {
-            System.out.println("-------------> " + e.getCause());
-            System.out.println("-------------> " + e.getMessage());
-        } catch (InternalServerErrorException e) {
+            var tradeSpotResponse = new ObjectMapper().readValue(response, TradeSpotResponse.class);
+            TradeJournalFactory.getInstance().getTrades().add(tradeSpotResponse);
 
-        } catch (Exception e) {
-
-        } finally {
-            TradeJournalFactory.getInstance().add(response);
+        } catch (CustomFeignException cfe) {
+            var error = cfe.getErrorTradeResponse();
+            TradeJournalFactory.getInstance().getErrors().add(error);
+        } catch (JsonProcessingException jpe) {
+            var error = jpe.getMessage();
+            ErrorTradeResponse errorTradeResponse = new ErrorTradeResponse(-1, error);
+            TradeJournalFactory.getInstance().getErrors().add(errorTradeResponse);
         }
     }
 
@@ -95,14 +97,11 @@ public class TradeSpotStrategy {
      */
     private int calculateQuantityCrypto(double money, double price) {
 
-        DecimalFormat decimalFormat = new DecimalFormat("#.##");
-
         if (money <= 0 || price <= 0) {
-            throw new IllegalArgumentException("Money and price are zero");
+            throw new IllegalArgumentException(MONEY_AND_PRICE_ZERO);
         }
 
         double quantity = money / price;
-
         return (int) quantity;
     }
 }

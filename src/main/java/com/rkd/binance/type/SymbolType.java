@@ -1,6 +1,7 @@
 package com.rkd.binance.type;
 
 import java.util.Arrays;
+import java.util.Random;
 
 import static com.rkd.binance.definition.ExceptionDefinition.ILLEGAL_ARGUMENT;
 
@@ -22,6 +23,7 @@ public enum SymbolType {
     MANA_USDT("MANAUSDT"),
     ALGO_USDT("ALGOUSDT"),
     INJ_USDT("INJUSDT"),
+    JASMY_USDT("JASMYUSDT"),
     ETH_BTC("ETHBTC"),
     ADA_BTC("ADABTC"),
     AVAX_BTC("AVAXBTC"),
@@ -34,13 +36,15 @@ public enum SymbolType {
     SAND_BTC("SANDBTC"),
     MANA_BTC("MANABTC"),
     ALGO_BTC("ALGOBTC"),
-    INJ_BTC("INJBTC");
+    INJ_BTC("INJBTC"),
+    JASMY_BTC("JASMYBTC");
 
     SymbolType(String symbol) {
         this.symbol = symbol;
     }
 
     private String symbol;
+    private static final Random RANDOM = new Random();
 
     public String getSymbol() {
         return symbol;
@@ -56,5 +60,10 @@ public enum SymbolType {
         return Arrays.stream(SymbolType.values())
                 .filter(symbolType -> symbolType.symbol.equalsIgnoreCase(symbol)).findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(ILLEGAL_ARGUMENT.concat("symbol")));
+    }
+
+    public static SymbolType getRandomSymbol() {
+        SymbolType[] values = SymbolType.values();
+        return values[RANDOM.nextInt(values.length)];
     }
 }

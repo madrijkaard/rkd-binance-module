@@ -27,8 +27,8 @@ public class StrategyFactory {
     @Autowired
     private StrategyFacade strategyFacade;
 
-    @Bean
-    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+    /*@Bean
+    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)*/
     public List<StrategyType> spotStrategy() {
         return spotStrategy.entrySet().stream()
                 .filter(Map.Entry::getValue)
@@ -36,8 +36,8 @@ public class StrategyFactory {
                 .collect(Collectors.toList());
     }
 
-    @Bean
-    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+    /*@Bean
+    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)*/
     public List<StrategyType> futureStrategy() {
         return futureStrategy.entrySet().stream()
                 .filter(Map.Entry::getValue)
@@ -45,8 +45,8 @@ public class StrategyFactory {
                 .collect(Collectors.toList());
     }
 
-    @Bean
-    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+    /*@Bean
+    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)*/
     public StrategyFacade strategy() {
         return strategyFacade;
     }

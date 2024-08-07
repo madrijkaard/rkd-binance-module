@@ -9,4 +9,5 @@ public class ExceptionDefinition {
     public static final String INVALID_MOVING_AVERAGE = "Failed to calculate moving average";
     public static final String MORE_THAN_ONE_CANDLESTICK_FOUND = "It is expected that there is only one candlestick";
     public static final String ERROR_IN_CALCULATING_MOVING_AVERAGES = "An error occurred during the moving average calculation process";
+    public static final String MONEY_AND_PRICE_ZERO = "Money and price are zero";
 }

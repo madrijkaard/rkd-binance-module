@@ -1,10 +1,12 @@
 package com.rkd.binance.util;
 
-import com.rkd.binance.type.VectorType;
-
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Random;
 
 public class TestUtil {
+
     public static double[] generateTwoRandomDoubles() {
 
         Random random = new Random();
@@ -49,9 +51,21 @@ public class TestUtil {
         return new float[]{minimumRange, maximumRange};
     }
 
-    public static String getRandomVectorType() {
-        VectorType[] values = VectorType.values();
-        int index = new Random().nextInt(values.length);
-        return values[index].name();
+    public static double generateRandomPrice() {
+        Random random = new Random();
+        double value = 10000 + (100000 - 10000) * random.nextDouble();
+        BigDecimal bd = new BigDecimal(value).setScale(2, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    public static double generateRandomMoney() {
+        Random random = new Random();
+        double value = 1000000 + (10000000 - 1000000) * random.nextDouble();
+        BigDecimal bd = new BigDecimal(value).setScale(2, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    public static double generateRandomInteger() {
+        return new Random().nextInt(10000, 100000);
     }
 }

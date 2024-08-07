@@ -6,10 +6,7 @@ import com.rkd.binance.facade.WalletFacade;
 import com.rkd.binance.type.CryptoType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,8 +32,8 @@ public class WalletFactory {
     /**
      * @return
      */
-    @Bean
-    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+    /*@Bean
+    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)*/
     public SpotWalletDto spotWallet() {
         var walletDto = walletFacade.loadSpot(fiatCoin, stableCoin);
         return checkMinimumQuantity(walletDto);
@@ -45,8 +42,8 @@ public class WalletFactory {
     /**
      * @return
      */
-    @Bean
-    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+    /*@Bean
+    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)*/
     public List<CrossMarginWalletDto> futureWallet() {
         return walletFacade.loadFuture();
     }

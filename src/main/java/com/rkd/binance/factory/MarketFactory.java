@@ -23,14 +23,14 @@ public class MarketFactory {
     @Autowired
     private MarketFacade marketFacade;
 
-    @Bean
-    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+    /*@Bean
+    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)*/
     public MarketFacade market() {
         return marketFacade;
     }
 
-    @Bean
-    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+    /*@Bean
+    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)*/
     public List<CryptoType> rankSpot() {
         return spotRank == 0 ? new ArrayList<>() : marketFacade.rankMostRelevant(spotRank);
     }

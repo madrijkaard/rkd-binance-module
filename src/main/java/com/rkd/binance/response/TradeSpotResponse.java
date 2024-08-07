@@ -21,5 +21,5 @@ public record TradeSpotResponse(
         String side,
         long workingTime,
         List<FillDto> fills,
-        String selfTradePreventionMode) implements TradeResponse {
+        String selfTradePreventionMode) {
 }

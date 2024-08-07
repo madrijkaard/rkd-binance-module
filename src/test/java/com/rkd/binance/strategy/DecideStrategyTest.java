@@ -1,6 +1,7 @@
 package com.rkd.binance.strategy;
 
 import com.rkd.binance.type.DecisionType;
+import com.rkd.binance.type.VectorType;
 import com.rkd.binance.util.TestUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +25,7 @@ public class DecideStrategyTest {
         var sma = prices[0];
         var lma = prices[1];
 
-        var vector = TestUtil.getRandomVectorType();
+        var vector = VectorType.getRandomVector().name();
 
         var minimum = ranges[0];
         var maximum = ranges[1];

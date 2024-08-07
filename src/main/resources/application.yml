@@ -1,13 +1,6 @@
 server:
   port: 8080
 
-# Jaeger
-opentracing:
-  jaeger:
-    enabled: true
-    udp-sender.host: 127.0.0.1
-    udp-sender.port: 6831
-
 # Cassandra
 spring:
   application:
