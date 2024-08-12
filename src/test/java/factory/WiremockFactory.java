@@ -58,8 +58,4 @@ public class WiremockFactory {
             throw new RuntimeException(e);
         }
     }
-
-    public WireMockServer getWireMockServer() {
-        return wireMockServer;
-    }
 }
