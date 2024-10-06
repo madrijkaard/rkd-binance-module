@@ -1,19 +1,32 @@
 package com.rkd.binance.executor;
 
-import com.rkd.binance.factory.MarketFactory;
-import com.rkd.binance.factory.StrategyFactory;
-import com.rkd.binance.factory.WalletFactory;
-import com.rkd.binance.strategy.TradeSpotStrategy;
+import com.rkd.binance.facade.MarketFacade;
+import com.rkd.binance.facade.StrategyFacade;
+import com.rkd.binance.facade.WalletFacade;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+
 /**
- *
+ * Class responsible for loading the context needed to trade in the spot market.
  */
 @Component
 public class BinanceExecutor {
 
+    Logger logger = LoggerFactory.getLogger(BinanceExecutor.class);
+
+    @Value("${binance.wallet.standard-fiat-coin}")
+    private String fiatCoin;
+    @Value("${binance.wallet.standard-stable-coin}")
+    private String stableCoin;
+    @Value("${binance.market.minimum-stable-coin}")
+    private double minimumStableCoin;
+    @Value("${binance.market.minimum-fiat-coin}")
+    private double minimumFiatCoin;
     @Value("${module.spot.status}")
     private boolean spotStatus;
     @Value("${module.future.status}")
@@ -30,19 +43,22 @@ public class BinanceExecutor {
     private float futureMinimumRange;
     @Value("${module.future.maximum-range}")
     private float futureMaximumRange;
+    @Value("#{${module.spot.strategy}}")
+    private HashMap<String, Boolean> spotStrategy = new HashMap<>();
+    @Value("#{${module.future.strategy}}")
+    private HashMap<String, Boolean> futureStrategy = new HashMap<>();
+    @Value("${module.spot.rank}")
+    private int spotRank;
+    @Value("${module.future.rank}")
+    private int futureRank;
 
     @Autowired
-    private WalletFactory walletFactory;
+    private WalletFacade walletFacade;
     @Autowired
-    private StrategyFactory strategyFactory;
+    private MarketFacade marketFacade;
     @Autowired
-    private MarketFactory marketFactory;
-    @Autowired
-    private TradeSpotStrategy tradeSpotStrategy;
+    private StrategyFacade strategyFacade;
 
-    /**
-     *
-     */
     public void execute() {
         if (spotStatus) {
             executeSpot();
@@ -53,21 +69,28 @@ public class BinanceExecutor {
     }
 
     /**
-     *
+     * Method responsible for initiating spot trading
      */
     public void executeSpot() {
 
-        var wallet = walletFactory.spotWallet();
-        var spotRank = marketFactory.rankSpot();
-        var haveMoney = walletFactory.haveMoney(spotRank);
-        var stableCoin = walletFactory.getStableCoin();
-        var strategyList = strategyFactory.spotStrategy();
+        var lista = marketFacade.load("ETH_USDT", "ONE_WEEK", 200);
+        logger.info("---> " + lista.size());
 
-        marketFactory.market().initializeSpot(wallet, spotRank, stableCoin, spotMinimumRange, spotMaximumRange, strategyList, haveMoney);
+        /*var strategyList = spotStrategy.entrySet().stream()
+                .filter(Map.Entry::getValue)
+                .map(entry -> of(entry.getKey()))
+                .collect(Collectors.toList());
+
+        var rank = spotRank == 0 ? new ArrayList<>() : marketFacade.rankMostRelevant(spotRank);
+        var stableCoinDouble = walletComponent.spotWallet().stableCoin();
+        var minimumStableCoin = walletComponent.getMinimumStableCoin();
+        var haveMoney = walletComponent.getWalletFacade().haveMoney(rank, stableCoinDouble, minimumStableCoin);
+
+        marketFactory.market().initializeSpot(wallet, rank, stableCoin, spotMinimumRange, spotMaximumRange, strategyList, haveMoney);*/
     }
 
     /**
-     *
+     * Method responsible for initiating future trading
      */
     public void executeFuture() {
     }

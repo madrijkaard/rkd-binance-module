@@ -8,8 +8,7 @@ import java.util.List;
  */
 public enum StrategyType {
 
-    ONE_MA(Arrays.asList("1h", "4h", "1d"), new int[]{11}),
-    TWO_MA(Arrays.asList("1d"), new int[]{7, 30});
+    TWO_MA(Arrays.asList("1d"), new int[]{8, 21});
 
     private List<String> intervals;
     private int[] ma;

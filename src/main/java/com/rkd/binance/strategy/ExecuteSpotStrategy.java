@@ -3,12 +3,14 @@ package com.rkd.binance.strategy;
 import com.rkd.binance.dto.SpotWalletDto;
 import com.rkd.binance.type.CryptoType;
 import com.rkd.binance.type.StrategyType;
+import com.rkd.binance.type.SymbolType;
+import com.rkd.binance.type.VectorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.rkd.binance.type.DecisionType.BUY;
+import static com.rkd.binance.type.DecisionType.*;
 
 /**
  *
@@ -36,17 +38,13 @@ public class ExecuteSpotStrategy {
     public void initialize(SpotWalletDto spotWalletDto, List<CryptoType> spotRank, String stableCoin, float spotMinimumRange, float spotMaximumRange,
                            List<StrategyType> strategyTypeList, boolean haveMoney) {
 
-        tradeSpotStrategy.tradeSpot("ADAUSDT", 10, BUY.name());
-
-        /*//VERIFICA VENDA POR CRUZAMENTO (GANHO) OU STOP-LIMIT DE CRIPTOS DA CARTEIRA
-
         spotWalletDto.cryptos().forEach(
 
                 (cryptoType, money) -> {
 
                     var symbol = cryptoType.name() + stableCoin;
 
-                    var decision = executeTradeStrategy.prepare(symbol, UP.name(), spotMinimumRange, spotMaximumRange, strategyTypeList);
+                    var decision = executeTradeStrategy.prepare(symbol, VectorType.UP.name(), spotMinimumRange, spotMaximumRange, strategyTypeList);
 
                     if (decision == SELL) {
                         tradeSpotStrategy.tradeSpot(symbol, money, SELL.name());
@@ -57,7 +55,7 @@ public class ExecuteSpotStrategy {
         spotRank.forEach(cryptoType -> {
 
             var symbol = cryptoType.name() + stableCoin;
-            var decision = executeTradeStrategy.prepare(symbol, UP.name(), spotMinimumRange, spotMaximumRange, strategyTypeList);
+            var decision = executeTradeStrategy.prepare(symbol, VectorType.UP.name(), spotMinimumRange, spotMaximumRange, strategyTypeList);
 
             if (isCrossBuy(decision) && haveMoney) {
                 var moneyByCrypto = spotWalletDto.stableCoin() / spotRank.size();
@@ -68,14 +66,14 @@ public class ExecuteSpotStrategy {
         //VERIFICA BITCOIN PARA COMPRA
         if (spotRank.isEmpty()) {
 
-            var symbol = BTC_USDT.getSymbol();
+            var symbol = SymbolType.BTC_USDT.getSymbol();
 
-            var decision = executeTradeStrategy.prepare(symbol, UP.name(), spotMinimumRange, spotMaximumRange, strategyTypeList);
+            var decision = executeTradeStrategy.prepare(symbol, VectorType.UP.name(), spotMinimumRange, spotMaximumRange, strategyTypeList);
 
             if (isCrossBuy(decision) && haveMoney) {
                 var moneyByCrypto = spotWalletDto.stableCoin() / spotRank.size();
                 tradeSpotStrategy.tradeSpot(symbol, moneyByCrypto, BUY.name());
             }
-        }*/
+        }
     }
 }

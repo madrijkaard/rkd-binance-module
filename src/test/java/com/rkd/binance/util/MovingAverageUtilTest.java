@@ -2,6 +2,7 @@ package com.rkd.binance.util;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import util.TestUtil;
 
 import static org.junit.jupiter.api.Assertions.*;
 

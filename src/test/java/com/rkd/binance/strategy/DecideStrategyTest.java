@@ -2,7 +2,7 @@ package com.rkd.binance.strategy;
 
 import com.rkd.binance.type.DecisionType;
 import com.rkd.binance.type.VectorType;
-import com.rkd.binance.util.TestUtil;
+import util.TestUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

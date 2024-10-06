@@ -6,7 +6,6 @@ import com.rkd.binance.strategy.*;
 import com.rkd.binance.type.CryptoType;
 import com.rkd.binance.type.DecisionType;
 import com.rkd.binance.type.StrategyType;
-import com.rkd.binance.type.VectorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -106,12 +105,14 @@ public class MarketFacade {
      * @param strategyTypeList
      * @param haveMoney
      */
-    public void initializeSpot(SpotWalletDto spotWalletDto, List<CryptoType> spotRank, String stableCoin, float spotMinimumRange, float spotMaximumRange, List<StrategyType> strategyTypeList, boolean haveMoney) {
+    public void initializeSpot(SpotWalletDto spotWalletDto, List<CryptoType> spotRank, String stableCoin,
+                               float spotMinimumRange, float spotMaximumRange, List<StrategyType> strategyTypeList, boolean haveMoney) {
         executeSpotStrategy.initialize(spotWalletDto, spotRank, stableCoin, spotMinimumRange, spotMaximumRange, strategyTypeList, haveMoney);
     }
 
 
-    public void initializeFuture(SpotWalletDto spotWalletDto, double minimumStableCoin, String stableCoin, String spotVector, float spotMinimumRange, float spotMaximumRange, List<StrategyType> strategyTypeList) {
+    public void initializeFuture(SpotWalletDto spotWalletDto, double minimumStableCoin, String stableCoin,
+                                 String spotVector, float spotMinimumRange, float spotMaximumRange, List<StrategyType> strategyTypeList) {
     }
 
     public List<CryptoType> rankMostRelevant(int rank) {

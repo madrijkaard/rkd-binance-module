@@ -1,9 +1,10 @@
 package com.rkd.binance.strategy;
 
 import com.rkd.binance.client.BinanceFutureClient;
-import com.rkd.binance.factory.CredentialFactory;
+import com.rkd.binance.component.CredentialComponent;
 import com.rkd.binance.type.*;
 import com.rkd.binance.type.PositionSideType;
+import com.rkd.binance.util.EnumUtil;
 import com.rkd.binance.util.RequestUtil;
 import com.rkd.binance.util.SignatureUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class TradeFutureStrategy {
 
     @Autowired
     private BinanceFutureClient binanceFutureClient;
+    @Autowired
+    private CredentialComponent credentialComponent;
 
     /**
      *
@@ -50,7 +53,7 @@ public class TradeFutureStrategy {
      */
     private void prepare(String symbol, String margin, int leverage, String side, String positionSide, String order, String quantity) {
 
-        var symbolType = SymbolType.of(symbol);
+        var symbolType = EnumUtil.of(SymbolType.class, symbol);
         var marginType = MarginType.of(margin);
         var leverageType = LeverageType.of(leverage);
         var sideType = DecisionType.of(side);
@@ -78,9 +81,9 @@ public class TradeFutureStrategy {
         parameters.put("timestamp", String.valueOf(milliseconds));
 
         var queryPath = RequestUtil.joinQueryParameters(parameters);
-        var signature = SignatureUtil.getSignature(queryPath, CredentialFactory.getInstance().getSecret());
+        var signature = SignatureUtil.getSignature(queryPath, credentialComponent.getSecret());
 
-        binanceFutureClient.changeMarginType(APPLICATION_JSON_VALUE, CredentialFactory.getInstance().getKey(),
+        binanceFutureClient.changeMarginType(APPLICATION_JSON_VALUE, credentialComponent.getKey(),
                 symbolType.getSymbol(), MarginType.ISOLATED.name(), String.valueOf(milliseconds), signature);
     }
 
@@ -100,9 +103,9 @@ public class TradeFutureStrategy {
         params.put("timestamp", String.valueOf(milliseconds));
 
         var queryPath = RequestUtil.joinQueryParameters(params);
-        var signature = SignatureUtil.getSignature(queryPath, CredentialFactory.getInstance().getSecret());
+        var signature = SignatureUtil.getSignature(queryPath, credentialComponent.getSecret());
 
-        binanceFutureClient.setLeverage(APPLICATION_JSON_VALUE, CredentialFactory.getInstance().getKey(), symbolType.getSymbol(), String.valueOf(leverageType), String.valueOf(milliseconds), signature);
+        binanceFutureClient.setLeverage(APPLICATION_JSON_VALUE, credentialComponent.getKey(), symbolType.getSymbol(), String.valueOf(leverageType), String.valueOf(milliseconds), signature);
     }
 
     /**
@@ -127,9 +130,9 @@ public class TradeFutureStrategy {
         params.put("timestamp", String.valueOf(milliseconds));
 
         var queryPath = RequestUtil.joinQueryParameters(params);
-        var signature = SignatureUtil.getSignature(queryPath, CredentialFactory.getInstance().getSecret());
+        var signature = SignatureUtil.getSignature(queryPath, credentialComponent.getSecret());
 
-        binanceFutureClient.placeOrder(APPLICATION_JSON_VALUE, CredentialFactory.getInstance().getKey(), symbolType.getSymbol(),
+        binanceFutureClient.placeOrder(APPLICATION_JSON_VALUE, credentialComponent.getKey(), symbolType.getSymbol(),
                 decisionType.name(), positionSideType.name(), positionSideType.name(), quantity, String.valueOf(milliseconds), signature);
     }
 }

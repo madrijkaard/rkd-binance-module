@@ -13,8 +13,12 @@ import static com.rkd.binance.definition.ExceptionDefinition.MORE_THAN_ONE_CANDL
 @Service
 public class LastPriceCandlestickStrategy {
 
-    @Autowired
     private LoadMarketStrategy loadMarketStrategy;
+
+    @Autowired
+    public LastPriceCandlestickStrategy(LoadMarketStrategy loadMarketStrategy) {
+        this.loadMarketStrategy = loadMarketStrategy;
+    }
 
     /**
      * Method responsible for obtaining the current price of the asset.

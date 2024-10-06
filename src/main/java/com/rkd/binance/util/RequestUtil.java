@@ -1,7 +1,5 @@
 package com.rkd.binance.util;
 
-import com.rkd.binance.factory.CredentialFactory;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -28,18 +26,18 @@ public class RequestUtil {
         return urlPath;
     }
 
-    public static void sendSignedRequest(HashMap<String, String> parameters, String urlPath, String httpMethod) throws Exception {
+    public static void sendSignedRequest(HashMap<String, String> parameters, String urlPath, String httpMethod, String secret, String key) throws Exception {
 
         String queryPath = "";
         String signature = "";
 
         if (!parameters.isEmpty()) {
-            queryPath += RequestUtil.joinQueryParameters(parameters) + "&" + getTimeStamp();
+            queryPath += joinQueryParameters(parameters) + "&" + getTimeStamp();
         } else {
             queryPath += getTimeStamp();
         }
         try {
-            signature = SignatureUtil.getSignature(queryPath, CredentialFactory.getInstance().getSecret());
+            signature = SignatureUtil.getSignature(queryPath, secret);
         } catch (Exception e) {
             System.out.println("Please Ensure Your Secret Key Is Set Up Correctly! " + e);
             System.exit(0);
@@ -49,7 +47,7 @@ public class RequestUtil {
         URL obj = new URL(urlPath + "?" + queryPath);
         System.out.println("url:" + obj.toString());
 
-        send(obj, httpMethod);
+        send(obj, httpMethod, key);
     }
 
     private static String getTimeStamp() {
@@ -57,7 +55,7 @@ public class RequestUtil {
         return "timestamp=" + String.valueOf(timestamp);
     }
 
-    private static void send(URL obj, String httpMethod) throws Exception {
+    private static void send(URL obj, String httpMethod, String key) throws Exception {
 
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -65,7 +63,7 @@ public class RequestUtil {
             con.setRequestMethod(httpMethod);
         }
 
-        con.setRequestProperty("X-MBX-APIKEY", CredentialFactory.getInstance().getKey());
+        con.setRequestProperty("X-MBX-APIKEY", key);
 
         int responseCode = con.getResponseCode();
 
@@ -77,6 +75,7 @@ public class RequestUtil {
     }
 
     private static void printResponse(HttpURLConnection con) throws IOException {
+
         BufferedReader in = new BufferedReader(new InputStreamReader(
                 con.getInputStream()));
         String inputLine;
@@ -91,6 +90,7 @@ public class RequestUtil {
     }
 
     private static void printError(HttpURLConnection con) throws IOException {
+
         BufferedReader in = new BufferedReader(new InputStreamReader(
                 con.getErrorStream()));
         String inputLine;

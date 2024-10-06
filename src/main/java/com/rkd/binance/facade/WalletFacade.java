@@ -4,13 +4,15 @@ import com.rkd.binance.dto.CrossMarginWalletDto;
 import com.rkd.binance.dto.SpotWalletDto;
 import com.rkd.binance.strategy.BalanceCrossMarginStrategy;
 import com.rkd.binance.strategy.BalanceSpotStrategy;
+import com.rkd.binance.strategy.CheckMoneyStrategy;
+import com.rkd.binance.type.CryptoType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
- * Facade responsible for strategies related to spot and futures market.
+ * Facade responsible for wallet component strategies in the spot and futures market.
  */
 @Service
 public class WalletFacade {
@@ -19,6 +21,8 @@ public class WalletFacade {
     private BalanceSpotStrategy balanceSpotStrategy;
     @Autowired
     private BalanceCrossMarginStrategy balanceFutureStrategy;
+    @Autowired
+    private CheckMoneyStrategy checkMoneyStrategy;
 
     /**
      * Method responsible for loading the wallet balance. Upon return, it will be possible to know the current amount of
@@ -39,5 +43,15 @@ public class WalletFacade {
      */
     public List<CrossMarginWalletDto> loadFuture() {
         return balanceFutureStrategy.getBalance();
+    }
+
+    /**
+     * Method responsible for checking whether the user has the minimum amount to trade.
+     *
+     * @param cryptoTypes list of cryptocurrencies
+     * @return check if the user has money
+     */
+    public boolean haveMoney(List<CryptoType> cryptoTypes, double stableCoin, double minimumStableCoin) {
+        return checkMoneyStrategy.haveMoney(cryptoTypes, stableCoin, minimumStableCoin);
     }
 }

@@ -1,69 +1,65 @@
 package com.rkd.binance.type;
 
-import java.util.Arrays;
-import java.util.Random;
-
-import static com.rkd.binance.definition.ExceptionDefinition.ILLEGAL_ARGUMENT;
+import static com.rkd.binance.type.CryptoType.*;
 
 /**
  * Enumerator responsible for defining currency pairs traded on Binance.
  */
 public enum SymbolType {
-    BTC_USDT("BTCUSDT"),
-    ETH_USDT("ETHUSDT"),
-    ADA_USDT("ADAUSDT"),
-    AVAX_USDT("AVAXUSDT"),
-    LINK_USDT("LINKUSDT"),
-    MATIC_USDT("MATICUSDT"),
-    DOT_USDT("DOTUSDT"),
-    ATOM_USDT("ATOMUSDT"),
-    GRT_USDT("GRTUSDT"),
-    FTM_USDT("FTMUSDT"),
-    SAND_USDT("SANDUSDT"),
-    MANA_USDT("MANAUSDT"),
-    ALGO_USDT("ALGOUSDT"),
-    INJ_USDT("INJUSDT"),
-    JASMY_USDT("JASMYUSDT"),
-    ETH_BTC("ETHBTC"),
-    ADA_BTC("ADABTC"),
-    AVAX_BTC("AVAXBTC"),
-    LINK_BTC("LINKBTC"),
-    MATIC_BTC("MATICBTC"),
-    DOT_BTC("DOTBTC"),
-    ATOM_BTC("ATOMBTC"),
-    GRT_BTC("GRTBTC"),
-    FTM_BTC("FTMBTC"),
-    SAND_BTC("SANDBTC"),
-    MANA_BTC("MANABTC"),
-    ALGO_BTC("ALGOBTC"),
-    INJ_BTC("INJBTC"),
-    JASMY_BTC("JASMYBTC");
 
-    SymbolType(String symbol) {
+    BTC_USDT("BTCUSDT", BTC, USDT),
+    ETH_USDT("ETHUSDT", ETH, USDT),
+    ADA_USDT("ADAUSDT", ADA, USDT),
+    AVAX_USDT("AVAXUSDT", AVAX, USDT),
+    LINK_USDT("LINKUSDT", LINK, USDT),
+    DOT_USDT("DOTUSDT", DOT, USDT),
+    ATOM_USDT("ATOMUSDT", ATOM, USDT),
+    GRT_USDT("GRTUSDT", GRT, USDT),
+    FTM_USDT("FTMUSDT", FTM, USDT),
+    SAND_USDT("SANDUSDT", SAND, USDT),
+    MANA_USDT("MANAUSDT", MANA, USDT),
+    ALGO_USDT("ALGOUSDT", ALGO, USDT),
+    INJ_USDT("INJUSDT", INJ, USDT),
+    JASMY_USDT("JASMYUSDT", JASMY, USDT),
+    BNB_USDT("BNBUSDT", BNB, USDT),
+    LTC_USDT("LTCUSDT", LTC, USDT),
+    NEAR_USDT("NEARUSDT", NEAR, USDT),
+    ETH_BTC("ETHBTC", ETH, USDT),
+    ADA_BTC("ADABTC", ADA, BTC),
+    AVAX_BTC("AVAXBTC", AVAX, BTC),
+    LINK_BTC("LINKBTC", LINK, BTC),
+    DOT_BTC("DOTBTC", DOT, BTC),
+    ATOM_BTC("ATOMBTC", ATOM, BTC),
+    GRT_BTC("GRTBTC", GRT, BTC),
+    FTM_BTC("FTMBTC", FTM, BTC),
+    SAND_BTC("SANDBTC", SAND, BTC),
+    MANA_BTC("MANABTC", MANA, BTC),
+    ALGO_BTC("ALGOBTC", ALGO, BTC),
+    INJ_BTC("INJBTC", INJ, BTC),
+    JASMY_BTC("JASMYBTC", JASMY, BTC),
+    BNB_BTC("BNBBTC", BNB, BTC),
+    LTC_BTC("LTCBTC", LTC, BTC),
+    NEAR_BTC("NEARBTC", NEAR, BTC);
+
+    SymbolType(String symbol, CryptoType crypto, CryptoType reference) {
         this.symbol = symbol;
+        this.crypto = crypto;
+        this.reference = reference;
     }
 
-    private String symbol;
-    private static final Random RANDOM = new Random();
+    private final String symbol;
+    private final CryptoType crypto;
+    private final CryptoType reference;
 
     public String getSymbol() {
         return symbol;
     }
 
-    /**
-     * Method responsible for validating the enumerator's input data.
-     *
-     * @param symbol currency pair
-     * @return value found in enumerator
-     */
-    public static SymbolType of(String symbol) {
-        return Arrays.stream(SymbolType.values())
-                .filter(symbolType -> symbolType.symbol.equalsIgnoreCase(symbol)).findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(ILLEGAL_ARGUMENT.concat("symbol")));
+    public CryptoType getCrypto() {
+        return crypto;
     }
 
-    public static SymbolType getRandomSymbol() {
-        SymbolType[] values = SymbolType.values();
-        return values[RANDOM.nextInt(values.length)];
+    public CryptoType getReference() {
+        return reference;
     }
 }

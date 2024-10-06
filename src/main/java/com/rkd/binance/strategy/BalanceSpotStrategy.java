@@ -3,8 +3,9 @@ package com.rkd.binance.strategy;
 import com.rkd.binance.client.BinanceSpotClient;
 import com.rkd.binance.dto.BalanceSpotDto;
 import com.rkd.binance.dto.SpotWalletDto;
-import com.rkd.binance.factory.CredentialFactory;
+import com.rkd.binance.component.CredentialComponent;
 import com.rkd.binance.type.CryptoType;
+import com.rkd.binance.util.EnumUtil;
 import com.rkd.binance.util.RequestUtil;
 import com.rkd.binance.util.SignatureUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.rkd.binance.definition.BinanceDefinition.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
@@ -21,34 +23,40 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Service
 public class BalanceSpotStrategy {
 
-    @Autowired
+    private CredentialComponent credentialComponent;
     private BinanceSpotClient binanceClient;
+
+    @Autowired
+    public BalanceSpotStrategy(CredentialComponent credentialComponent, BinanceSpotClient binanceClient) {
+        this.credentialComponent = credentialComponent;
+        this.binanceClient = binanceClient;
+    }
 
     /**
      * Method responsible for loading the wallet balance. Upon return, it will be possible to know the current amount of
      * resources in fiat currency, stable currency and cryptocurrencies.
      *
-     * @param fiatCoin BRL
-     * @param stableCoin USDT
+     * @param fiatCoin fiat currency (e.g., BRL)
+     * @param stableCoin stable coin (e.g., USDT)
      * @return wallet containing fiat currency, stable currency and list of cryptocurrencies
      */
     public SpotWalletDto getBalance(String fiatCoin, String stableCoin) {
 
         var balanceDtoList = getBalance();
-
         var fiatCoinLoaded = loadFiat(fiatCoin, balanceDtoList);
         var stableCoinLoaded = loadStable(stableCoin, balanceDtoList);
         var cryptosLoaded = loadCryptos(balanceDtoList);
+        var spotWalletDto = new SpotWalletDto(fiatCoinLoaded, stableCoinLoaded, cryptosLoaded);
 
-        return new SpotWalletDto(fiatCoinLoaded, stableCoinLoaded, cryptosLoaded);
+        return checkMinimumQuantity(spotWalletDto);
     }
 
     /**
-     * Method responsible for obtaining the balance of an asset in the wallet.
+     * Method responsible for obtaining the wallet balance on Binance.
      *
-     * @return a list of balance details for each asset in the wallet
+     * @return detailed list containing all the assets in a wallet on Binance
      */
-    public List<BalanceSpotDto> getBalance() {
+    private List<BalanceSpotDto> getBalance() {
 
         long milliseconds = System.currentTimeMillis();
 
@@ -56,17 +64,18 @@ public class BalanceSpotStrategy {
         parameters.put("timestamp", String.valueOf(milliseconds));
 
         var queryPath = RequestUtil.joinQueryParameters(parameters);
-        var signature = SignatureUtil.getSignature(queryPath, CredentialFactory.getInstance().getSecret());
+        var secret = credentialComponent.getSecret();
+        var key = credentialComponent.getKey();
+        var signature = SignatureUtil.getSignature(queryPath, secret);
 
-        return binanceClient.getBalanceSpot(APPLICATION_JSON_VALUE,
-                CredentialFactory.getInstance().getKey(), String.valueOf(milliseconds), signature);
+        return binanceClient.getBalanceSpot(APPLICATION_JSON_VALUE, key, String.valueOf(milliseconds), signature);
     }
 
     /**
      * Method responsible for loading the balance of a specified fiat currency.
      *
      * @param fiatCoin the fiat currency to be loaded (e.g., BRL)
-     * @param balanceDtoList the list of balances from the wallet
+     * @param balanceDtoList detailed list containing all the assets in a wallet on Binance
      * @return the balance amount of the specified fiat currency
      * @throws IllegalStateException if the fiat currency is not defined
      */
@@ -76,8 +85,7 @@ public class BalanceSpotStrategy {
             throw new IllegalStateException("Fiat coin has not been defined");
         }
 
-        return balanceDtoList.stream().filter(
-                        balanceDto -> balanceDto.asset().equalsIgnoreCase(fiatCoin))
+        return balanceDtoList.stream().filter(balanceDto -> balanceDto.asset().equalsIgnoreCase(fiatCoin))
                 .findFirst().map(BalanceSpotDto::free).map(Double::parseDouble).orElse(0D);
     }
 
@@ -85,7 +93,7 @@ public class BalanceSpotStrategy {
      * Method responsible for loading the balance of a specified stable currency.
      *
      * @param stableCoin the stable currency to be loaded (e.g., USDT)
-     * @param balanceDtoList the list of balances from the wallet
+     * @param balanceDtoList detailed list containing all the assets in a wallet on Binance
      * @return the balance amount of the specified stable currency
      * @throws IllegalStateException if the stable currency is not defined
      */
@@ -95,25 +103,44 @@ public class BalanceSpotStrategy {
             throw new IllegalStateException("Stable coin has not been defined");
         }
 
-        return balanceDtoList.stream().filter(
-                        balanceDto -> balanceDto.asset().equalsIgnoreCase(stableCoin))
+        return balanceDtoList.stream().filter(balanceDto -> balanceDto.asset().equalsIgnoreCase(stableCoin))
                 .findFirst().map(BalanceSpotDto::free).map(Double::parseDouble).orElse(0D);
     }
 
     /**
      * Method responsible for loading the balances of various cryptocurrencies.
      *
-     * @param balanceDtoList the list of balances from the wallet
-     * @return a map containing the types of cryptocurrencies and their respective balances
+     * @param balanceDtoList detailed list containing all the assets in a wallet on Binance
+     * @return map containing the types of cryptocurrencies and their respective balances
      */
     private HashMap<CryptoType, Double> loadCryptos(List<BalanceSpotDto> balanceDtoList) {
 
         HashMap<CryptoType, Double> cryptos = new HashMap<>();
 
         balanceDtoList.forEach(
-                balanceDto -> CryptoType.exist(balanceDto.asset()).ifPresent(
-                        cryptoType -> cryptos.put(cryptoType, Double.valueOf(balanceDto.free()))));
+                balanceDto -> EnumUtil.exist(CryptoType.class, balanceDto.asset())
+                        .ifPresent(cryptoType -> cryptos.put(cryptoType, Double.valueOf(balanceDto.free()))));
 
         return cryptos;
+    }
+
+    /**
+     * Method responsible for checking which cryptos have the minimum balance to be eligible for trading.
+     *
+     * @param spotWalletDto wallet containing fiat currency, stable currency and list of cryptocurrencies
+     * @return wallet containing assets with a valid balance for trading
+     */
+    private SpotWalletDto checkMinimumQuantity(SpotWalletDto spotWalletDto) {
+
+        HashMap<CryptoType, Double> cryptos = new HashMap<>();
+
+        spotWalletDto.cryptos().forEach(
+                (cryptoType, money) -> {
+                    if (MINIMUM_AMOUNT_OF_MONEY_IN_USDT <= money) {
+                        cryptos.put(cryptoType, money);
+                    }
+                });
+
+        return new SpotWalletDto(spotWalletDto.fiatCoin(), spotWalletDto.stableCoin(), cryptos);
     }
 }

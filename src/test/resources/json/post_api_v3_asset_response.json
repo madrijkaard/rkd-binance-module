@@ -1,0 +1,173 @@
+[
+  {
+    "asset": "BRL",
+    "free": "1500",
+    "locked": "0",
+    "freeze": "0",
+    "withdrawing": "0",
+    "ipoable": "0",
+    "btcValuation": "0"
+  },
+  {
+    "asset": "USDT",
+    "free": "500",
+    "locked": "0",
+    "freeze": "0",
+    "withdrawing": "0",
+    "ipoable": "0",
+    "btcValuation": "0"
+  },
+  {
+    "asset": "BTC",
+    "free": "5",
+    "locked": "0",
+    "freeze": "0",
+    "withdrawing": "0",
+    "ipoable": "0",
+    "btcValuation": "0"
+  },
+  {
+    "asset": "ETH",
+    "free": "8",
+    "locked": "0",
+    "freeze": "0",
+    "withdrawing": "0",
+    "ipoable": "0",
+    "btcValuation": "0"
+  },
+  {
+    "asset": "ADA",
+    "free": "0",
+    "locked": "0",
+    "freeze": "0",
+    "withdrawing": "0",
+    "ipoable": "0",
+    "btcValuation": "0"
+  },
+  {
+    "asset": "AVAX",
+    "free": "0",
+    "locked": "0",
+    "freeze": "0",
+    "withdrawing": "0",
+    "ipoable": "0",
+    "btcValuation": "0"
+  },
+  {
+    "asset": "LINK",
+    "free": "0",
+    "locked": "0",
+    "freeze": "0",
+    "withdrawing": "0",
+    "ipoable": "0",
+    "btcValuation": "0"
+  },
+  {
+    "asset": "DOT",
+    "free": "0",
+    "locked": "0",
+    "freeze": "0",
+    "withdrawing": "0",
+    "ipoable": "0",
+    "btcValuation": "0"
+  },
+  {
+    "asset": "ATOM",
+    "free": "0",
+    "locked": "0",
+    "freeze": "0",
+    "withdrawing": "0",
+    "ipoable": "0",
+    "btcValuation": "0"
+  },
+  {
+    "asset": "GRT",
+    "free": "0",
+    "locked": "0",
+    "freeze": "0",
+    "withdrawing": "0",
+    "ipoable": "0",
+    "btcValuation": "0"
+  },
+  {
+    "asset": "FTM",
+    "free": "0",
+    "locked": "0",
+    "freeze": "0",
+    "withdrawing": "0",
+    "ipoable": "0",
+    "btcValuation": "0"
+  },
+  {
+    "asset": "SAND",
+    "free": "0",
+    "locked": "0",
+    "freeze": "0",
+    "withdrawing": "0",
+    "ipoable": "0",
+    "btcValuation": "0"
+  },
+  {
+    "asset": "MANA",
+    "free": "0",
+    "locked": "0",
+    "freeze": "0",
+    "withdrawing": "0",
+    "ipoable": "0",
+    "btcValuation": "0"
+  },
+  {
+    "asset": "ALGO",
+    "free": "0",
+    "locked": "0",
+    "freeze": "0",
+    "withdrawing": "0",
+    "ipoable": "0",
+    "btcValuation": "0"
+  },
+  {
+    "asset": "INJ",
+    "free": "0",
+    "locked": "0",
+    "freeze": "0",
+    "withdrawing": "0",
+    "ipoable": "0",
+    "btcValuation": "0"
+  },
+  {
+    "asset": "JASMY",
+    "free": "0",
+    "locked": "0",
+    "freeze": "0",
+    "withdrawing": "0",
+    "ipoable": "0",
+    "btcValuation": "0"
+  },
+  {
+    "asset": "BNB",
+    "free": "0",
+    "locked": "0",
+    "freeze": "0",
+    "withdrawing": "0",
+    "ipoable": "0",
+    "btcValuation": "0"
+  },
+  {
+    "asset": "LTC",
+    "free": "0",
+    "locked": "0",
+    "freeze": "0",
+    "withdrawing": "0",
+    "ipoable": "0",
+    "btcValuation": "0"
+  },
+  {
+    "asset": "NEAR",
+    "free": "0",
+    "locked": "0",
+    "freeze": "0",
+    "withdrawing": "0",
+    "ipoable": "0",
+    "btcValuation": "0"
+  }
+]

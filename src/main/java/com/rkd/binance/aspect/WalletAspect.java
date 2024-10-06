@@ -40,8 +40,8 @@ public class WalletAspect {
     @Before("executeSpotMethod() && args(fiatCoin, stableCoin)")
     public void logSpotMethodEntry(String fiatCoin, String stableCoin) {
         logger.info("------------------ Spot Account Balance ------------------");
-        logger.info("fiatCoin: " + fiatCoin);
-        logger.info("stableCoin: " + stableCoin);
+        logger.info("fiatCoin: {}", fiatCoin);
+        logger.info("stableCoin: {}", stableCoin);
     }
 
     /**
@@ -69,6 +69,6 @@ public class WalletAspect {
      */
     @AfterReturning(pointcut = "executeFutureMethod()", returning = "result")
     public void logFutureMethodExit(Object result) {
-        logger.info("Balance future: " + result);
+        logger.info("Balance future: {}", result);
     }
 }

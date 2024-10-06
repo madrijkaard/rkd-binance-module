@@ -1,8 +1,7 @@
-package com.rkd.binance.util;
+package util;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.Random;
 
 public class TestUtil {
@@ -65,7 +64,14 @@ public class TestUtil {
         return bd.doubleValue();
     }
 
-    public static double generateRandomInteger() {
-        return new Random().nextInt(10000, 100000);
+    public static int generateRandomInteger() {
+        return new Random().nextInt(1, 999);
+    }
+
+    public static <T extends Enum<T>> T generateRandomEnum(Class<T> enumClass) {
+        T[] enumValues = enumClass.getEnumConstants();
+        Random random = new Random();
+        int randomIndex = random.nextInt(enumValues.length);
+        return enumValues[randomIndex];
     }
 }
