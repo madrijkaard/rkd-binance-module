@@ -16,7 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import util.TestUtil;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Import(TestConfig.class)
 @ExtendWith(SpringExtension.class)
@@ -42,13 +42,8 @@ public class LoadMarketStrategyTest extends DynamicPropertyConfig {
         var interval = TestUtil.generateRandomEnum(IntervalType.class);
         var limit = TestUtil.generateRandomInteger();
 
-        try {
-            loadMarketStrategy.load(null, interval.name(), limit);
-            fail();
-        } catch (IllegalArgumentException iae) {
-            var response = iae.getMessage();
-            assertEquals("Invalid argument for SymbolType: null", response);
-        }
+        var actual = assertThrows(IllegalArgumentException.class, () -> loadMarketStrategy.load(null, interval.name(), limit));
+        assertEquals("Invalid argument for SymbolType: null", actual.getMessage());
     }
 
     @Test
@@ -58,13 +53,8 @@ public class LoadMarketStrategyTest extends DynamicPropertyConfig {
         var symbol = TestUtil.generateRandomEnum(SymbolType.class);
         var limit = TestUtil.generateRandomInteger();
 
-        try {
-            loadMarketStrategy.load(symbol.name(), null, limit);
-            fail();
-        } catch (IllegalArgumentException iae) {
-            var response = iae.getMessage();
-            assertEquals("Invalid argument for IntervalType: null", response);
-        }
+        var actual = assertThrows(IllegalArgumentException.class, () -> loadMarketStrategy.load(symbol.name(), null, limit));
+        assertEquals("Invalid argument for IntervalType: null", actual.getMessage());
     }
 
     @Test
@@ -74,13 +64,8 @@ public class LoadMarketStrategyTest extends DynamicPropertyConfig {
         var symbol = TestUtil.generateRandomEnum(SymbolType.class);
         var interval = TestUtil.generateRandomEnum(IntervalType.class);
 
-        try {
-            loadMarketStrategy.load(symbol.name(), interval.name(), -1);
-            fail();
-        } catch (IllegalArgumentException iae) {
-            var response = iae.getMessage();
-            assertEquals("Invalid argument: limit", response);
-        }
+        var actual = assertThrows(IllegalArgumentException.class, () -> loadMarketStrategy.load(symbol.name(), interval.name(), -1));
+        assertEquals("Invalid argument: limit", actual.getMessage());
     }
 
     @Test
@@ -90,13 +75,8 @@ public class LoadMarketStrategyTest extends DynamicPropertyConfig {
         var symbol = TestUtil.generateRandomEnum(SymbolType.class);
         var interval = TestUtil.generateRandomEnum(IntervalType.class);
 
-        try {
-            loadMarketStrategy.load(symbol.name(), interval.name(), 0);
-            fail();
-        } catch (IllegalArgumentException iae) {
-            var response = iae.getMessage();
-            assertEquals("Invalid argument: limit", response);
-        }
+        var actual = assertThrows(IllegalArgumentException.class, () -> loadMarketStrategy.load(symbol.name(), interval.name(), 0));
+        assertEquals("Invalid argument: limit", actual.getMessage());
     }
 
     @Test
@@ -106,12 +86,7 @@ public class LoadMarketStrategyTest extends DynamicPropertyConfig {
         var symbol = TestUtil.generateRandomEnum(SymbolType.class);
         var interval = TestUtil.generateRandomEnum(IntervalType.class);
 
-        try {
-            loadMarketStrategy.load(symbol.name(), interval.name(), 1001);
-            fail();
-        } catch (IllegalArgumentException iae) {
-            var response = iae.getMessage();
-            assertEquals("Invalid argument: limit", response);
-        }
+        var actual = assertThrows(IllegalArgumentException.class, () -> loadMarketStrategy.load(symbol.name(), interval.name(), 1001));
+        assertEquals("Invalid argument: limit", actual.getMessage());
     }
 }

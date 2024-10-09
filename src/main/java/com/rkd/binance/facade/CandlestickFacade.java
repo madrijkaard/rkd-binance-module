@@ -2,7 +2,6 @@ package com.rkd.binance.facade;
 
 import com.rkd.binance.model.KlineModel;
 import com.rkd.binance.strategy.*;
-import com.rkd.binance.strategy.SaveMarketStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +44,7 @@ public class CandlestickFacade {
         saveMarketStrategy.saveMarket(klineModelList);
     }
 
-    public double getLastPrice(String symbol, String interval) {
-        return lastPriceCandlestickStrategy.getLastPrice(symbol, interval);
+    public double getLastPrice(String symbol) {
+        return lastPriceCandlestickStrategy.getLastPrice(symbol);
     }
 }

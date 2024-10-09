@@ -3,9 +3,9 @@ package com.rkd.binance.strategy;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rkd.binance.client.BinanceSpotClient;
-import com.rkd.binance.exception.CustomFeignException;
 import com.rkd.binance.component.CredentialComponent;
 import com.rkd.binance.component.TradeJournalComponent;
+import com.rkd.binance.exception.CustomFeignException;
 import com.rkd.binance.response.ErrorTradeResponse;
 import com.rkd.binance.response.TradeSpotResponse;
 import com.rkd.binance.type.DecisionType;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 
 import static com.rkd.binance.definition.ExceptionDefinition.MONEY_AND_PRICE_ZERO;
-import static com.rkd.binance.type.IntervalType.ONE_HOUR;
 import static com.rkd.binance.type.OrderType.MARKET;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -42,8 +41,8 @@ public class TradeSpotStrategy {
     /**
      * Method responsible for executing purchase and sale operations.
      *
-     * @param symbol example: BTCUSDT, ETHUSDT, ADAUSDT
-     * @param money amount of resources that will be spent on buying or selling
+     * @param symbol   example: BTCUSDT, ETHUSDT, ADAUSDT
+     * @param money    amount of resources that will be spent on buying or selling
      * @param decision example: Buy, Sell, Wait
      * @throws CustomFeignException an error occurred while trying to trade
      */
@@ -55,7 +54,7 @@ public class TradeSpotStrategy {
         var typeOrder = MARKET.name();
         long milliseconds = System.currentTimeMillis();
 
-        var lastPrice = lastPriceCandlestickStrategy.getLastPrice(symbol, ONE_HOUR.getInterval());
+        var lastPrice = lastPriceCandlestickStrategy.getLastPrice(symbol);
         var quantity = String.valueOf(calculateQuantityCrypto(money, lastPrice));
 
         HashMap<String, String> parameters = new HashMap<>();

@@ -1,5 +1,6 @@
 package com.rkd.binance.executor;
 
+import com.rkd.binance.facade.CandlestickFacade;
 import com.rkd.binance.facade.MarketFacade;
 import com.rkd.binance.facade.StrategyFacade;
 import com.rkd.binance.facade.WalletFacade;
@@ -58,6 +59,8 @@ public class BinanceExecutor {
     private MarketFacade marketFacade;
     @Autowired
     private StrategyFacade strategyFacade;
+    @Autowired
+    private CandlestickFacade candlestickFacade;
 
     public void execute() {
         if (spotStatus) {
@@ -73,8 +76,8 @@ public class BinanceExecutor {
      */
     public void executeSpot() {
 
-        var lista = marketFacade.load("ETH_USDT", "ONE_WEEK", 200);
-        logger.info("---> " + lista.size());
+        var carteira = walletFacade.loadSpot("BRL", "USDT");
+        logger.info("--> " + carteira);
 
         /*var strategyList = spotStrategy.entrySet().stream()
                 .filter(Map.Entry::getValue)

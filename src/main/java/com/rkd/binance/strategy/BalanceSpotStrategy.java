@@ -1,20 +1,20 @@
 package com.rkd.binance.strategy;
 
 import com.rkd.binance.client.BinanceSpotClient;
+import com.rkd.binance.component.CredentialComponent;
 import com.rkd.binance.dto.BalanceSpotDto;
 import com.rkd.binance.dto.SpotWalletDto;
-import com.rkd.binance.component.CredentialComponent;
 import com.rkd.binance.type.CryptoType;
 import com.rkd.binance.util.EnumUtil;
-import com.rkd.binance.util.RequestUtil;
-import com.rkd.binance.util.SignatureUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 
-import static com.rkd.binance.definition.BinanceDefinition.*;
+import static com.rkd.binance.definition.BinanceDefinition.MINIMUM_AMOUNT_OF_MONEY_IN_USDT;
+import static com.rkd.binance.util.RequestUtil.joinQueryParameters;
+import static com.rkd.binance.util.SignatureUtil.getSignature;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
@@ -25,6 +25,7 @@ public class BalanceSpotStrategy {
 
     private CredentialComponent credentialComponent;
     private BinanceSpotClient binanceClient;
+    private LastPriceCandlestickStrategy lastPriceCandlestickStrategy;
 
     @Autowired
     public BalanceSpotStrategy(CredentialComponent credentialComponent, BinanceSpotClient binanceClient) {
@@ -36,7 +37,7 @@ public class BalanceSpotStrategy {
      * Method responsible for loading the wallet balance. Upon return, it will be possible to know the current amount of
      * resources in fiat currency, stable currency and cryptocurrencies.
      *
-     * @param fiatCoin fiat currency (e.g., BRL)
+     * @param fiatCoin   fiat currency (e.g., BRL)
      * @param stableCoin stable coin (e.g., USDT)
      * @return wallet containing fiat currency, stable currency and list of cryptocurrencies
      */
@@ -63,10 +64,10 @@ public class BalanceSpotStrategy {
         HashMap<String, String> parameters = new HashMap<>();
         parameters.put("timestamp", String.valueOf(milliseconds));
 
-        var queryPath = RequestUtil.joinQueryParameters(parameters);
+        var queryPath = joinQueryParameters(parameters);
         var secret = credentialComponent.getSecret();
         var key = credentialComponent.getKey();
-        var signature = SignatureUtil.getSignature(queryPath, secret);
+        var signature = getSignature(queryPath, secret);
 
         return binanceClient.getBalanceSpot(APPLICATION_JSON_VALUE, key, String.valueOf(milliseconds), signature);
     }
@@ -74,7 +75,7 @@ public class BalanceSpotStrategy {
     /**
      * Method responsible for loading the balance of a specified fiat currency.
      *
-     * @param fiatCoin the fiat currency to be loaded (e.g., BRL)
+     * @param fiatCoin       the fiat currency to be loaded (e.g., BRL)
      * @param balanceDtoList detailed list containing all the assets in a wallet on Binance
      * @return the balance amount of the specified fiat currency
      * @throws IllegalStateException if the fiat currency is not defined
@@ -92,7 +93,7 @@ public class BalanceSpotStrategy {
     /**
      * Method responsible for loading the balance of a specified stable currency.
      *
-     * @param stableCoin the stable currency to be loaded (e.g., USDT)
+     * @param stableCoin     the stable currency to be loaded (e.g., USDT)
      * @param balanceDtoList detailed list containing all the assets in a wallet on Binance
      * @return the balance amount of the specified stable currency
      * @throws IllegalStateException if the stable currency is not defined
@@ -143,4 +144,8 @@ public class BalanceSpotStrategy {
 
         return new SpotWalletDto(spotWalletDto.fiatCoin(), spotWalletDto.stableCoin(), cryptos);
     }
+
+    /*private boolean isValid(CryptoType cryptoType, Double money, String stableCoin) {
+        var lastPrice = lastPriceCandlestickStrategy.getLastPrice();
+    }*/
 }

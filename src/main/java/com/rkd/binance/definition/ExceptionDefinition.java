@@ -4,6 +4,7 @@ public class ExceptionDefinition {
     public static final String ILLEGAL_ARGUMENT = "Invalid argument: ";
     public static final String ENDPOINT_DID_NOT_RETURN_RESULTS = "The following endpoint returned no results: ";
     public static final String CANDLESTICK_LIST_IS_EMPTY = "Candlestick list is empty";
+    public static final String CANDLESTICK_LIST_IS_NULL = "Candlestick list is null";
     public static final String INTERVAL_IS_NOT_MAPPED = "Interval is not mapped";
     public static final String PRICE_LIST_IS_EMPTY = "Price list is empty";
     public static final String INVALID_MOVING_AVERAGE = "Failed to calculate moving average";
