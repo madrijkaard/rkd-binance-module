@@ -4,6 +4,7 @@ package com.rkd.binance.type;
  * Enumerator responsible for representing cryptocurrency codes.
  */
 public enum CryptoType {
+    BRL,    // Brazilian Real
     USDT,   // Tether
     BTC,    // Bitcoin
     ETH,    // Ethereum

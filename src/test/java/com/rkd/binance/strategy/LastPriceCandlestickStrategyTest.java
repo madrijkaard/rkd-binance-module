@@ -5,6 +5,7 @@ import com.rkd.binance.converter.KlineConverter;
 import config.DynamicPropertyConfig;
 import config.TestConfig;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -45,12 +46,14 @@ public class LastPriceCandlestickStrategyTest extends DynamicPropertyConfig {
     }
 
     @Test
+    @DisplayName("Tests whether the current price service returns a valid price")
     public void getLastPrice() {
         var actual = lastPriceCandlestickStrategy.getLastPrice(BTC_USDT.name());
         assertTrue(actual > 0);
     }
 
     @Test
+    @DisplayName("Tests when the current price service returns empty")
     public void getLastPriceExceptionEmptyList() {
         when(loadMarketStrategyMock.load(BTC_USDT.name(), ONE_HOUR.name(), LIMIT_DEFAULT)).thenReturn(emptyList());
         lastPriceCandlestickStrategy = new LastPriceCandlestickStrategy(loadMarketStrategyMock);
@@ -58,6 +61,7 @@ public class LastPriceCandlestickStrategyTest extends DynamicPropertyConfig {
     }
 
     @Test
+    @DisplayName("Tests when the current price service returns null")
     public void getLastPriceExceptionNull() {
         when(loadMarketStrategyMock.load(BTC_USDT.name(), ONE_HOUR.name(), LIMIT_DEFAULT)).thenReturn(null);
         lastPriceCandlestickStrategy = new LastPriceCandlestickStrategy(loadMarketStrategyMock);

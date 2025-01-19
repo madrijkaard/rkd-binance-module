@@ -5,7 +5,6 @@ import com.rkd.binance.component.CredentialComponent;
 import com.rkd.binance.dto.BalanceSpotDto;
 import com.rkd.binance.dto.SpotWalletDto;
 import com.rkd.binance.type.CryptoType;
-import com.rkd.binance.util.EnumUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.rkd.binance.definition.BinanceDefinition.MINIMUM_AMOUNT_OF_MONEY_IN_USDT;
+import static com.rkd.binance.util.EnumUtil.*;
 import static com.rkd.binance.util.RequestUtil.joinQueryParameters;
 import static com.rkd.binance.util.SignatureUtil.getSignature;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -119,7 +119,7 @@ public class BalanceSpotStrategy {
         HashMap<CryptoType, Double> cryptos = new HashMap<>();
 
         balanceDtoList.forEach(
-                balanceDto -> EnumUtil.exist(CryptoType.class, balanceDto.asset())
+                balanceDto -> exist(CryptoType.class, balanceDto.asset())
                         .ifPresent(cryptoType -> cryptos.put(cryptoType, Double.valueOf(balanceDto.free()))));
 
         return cryptos;
